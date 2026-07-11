@@ -26,7 +26,7 @@ Ensure you have [R](https://r-project.org) installed (built on version 4.6.1).
 
 ### 2. Clone the Repository
 ```bash
-git clone https://github.com
+git clone https://github.com/rchinmay91/customer-churn-prediction.git
 cd customer-churn-prediction
 ```
 
