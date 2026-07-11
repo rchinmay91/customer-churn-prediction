@@ -1,0 +1,76 @@
+# Install the tools needed for your analysis
+renv::install("tidyverse")
+renv::install("DataExplorer")
+
+# Lock your environment state so it saves permanently 
+renv::snapshot()
+
+# ==============================================================================
+# 1. ENVIRONMENT SETUP
+# ==============================================================================
+# Force the working directory to your specific project folder
+setwd("C:/Users/ASUS/Downloads/customer-churn-prediction")
+
+# Ensure project directories exist
+dir.create("data/raw", recursive = TRUE, showWarnings = FALSE)
+
+# Initialize renv if it hasn't been initialized yet
+if (!file.exists("renv.lock")) {
+  renv::init(bare = TRUE)
+}
+
+# Install missing packages locally within the project environment
+required_packages <- c("tidyverse", "DataExplorer")
+missing_packages <- required_packages[!required_packages %in% installed.packages()[, "Package"]]
+
+if (length(missing_packages) > 0) {
+  renv::install(missing_packages)
+  renv::snapshot(prompt = FALSE) # Lock package states
+}
+
+# Load the verified libraries
+library(tidyverse)
+library(DataExplorer)
+
+# ==============================================================================
+# 2. DATA INGESTION
+# ==============================================================================
+data_path <- "data/raw/Telco-Customer-Churn.csv"
+
+# Safety check: Ensure the user placed the file in the correct directory
+if (!file.exists(data_path)) {
+  stop(paste("File missing! Please place 'Telco-Customer-Churn.csv' inside:", 
+             getwd(), "/data/raw/"))
+}
+
+# Load the customer data
+churn_data <- read_csv(data_path, show_col_types = FALSE)
+
+# ==============================================================================
+# 3. AUTOMATED EXPLORATORY DATA ANALYSIS (EDA)
+# ==============================================================================
+# Generates a comprehensive HTML profile report in your main project folder
+create_report(
+  data = churn_data, 
+  output_file = "churn_eda_report.html",
+  report_title = "Telco Customer Churn EDA Report"
+)
+
+# ==============================================================================
+# 4. CUSTOM VISUALIZATION
+# ==============================================================================
+# Plot proportional churn rate grouped by contract type
+churn_plot <- churn_data %>%
+  ggplot(aes(x = Contract, fill = Churn)) +
+  geom_bar(position = "fill") +
+  theme_minimal() +
+  labs(
+    title = "Churn Rate by Contract Type", 
+    x = "Contract Type",
+    y = "Proportion",
+    fill = "Churn Status"
+  )
+
+# Output the plot to your console
+print(churn_plot)
+

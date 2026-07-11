@@ -1,0 +1,13 @@
+# renv files (Ignore the heavy package binaries, keep settings)
+renv/library/
+renv/local/
+renv/staging/
+
+# Data files (Don't upload large datasets to GitHub)
+data/
+
+# Output files
+*.html
+.Rhistory
+.RData
+.Ruserdata
